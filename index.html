@@ -1,151 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Exact Digital Clock</title>
+<title>Exact Pic Clock</title>
 
 <style>
 body{
     margin:0;
+    background:#000;
+    display:flex;
+    justify-content:center;
+    align-items:center;
     height:100vh;
-    background:black;
+}
+
+.clock{
+    width:540px;
+    height:190px;
+    border-radius:32px;
+    background:#000;
+    position:relative;
     display:flex;
     justify-content:center;
     align-items:center;
 }
 
-/* CLOCK BOX */
-.clock{
-    position:relative;
-    padding:28px 45px 40px;
-    border-radius:28px;
-    border:3px solid transparent;
-    background:
-      linear-gradient(#000,#000) padding-box,
-      linear-gradient(90deg,#ff9a9e,#fad0c4) border-box;
-    transition:.4s;
-}
-.clock:hover{
-    box-shadow:0 0 35px rgba(255,180,180,.9);
-}
-
-/* DISPLAY */
-.display{
-    display:flex;
-    align-items:center;
-    gap:14px;
-}
-
-/* SVG DIGITS */
-svg{
-    width:60px;
-    height:90px;
-}
-.segment{
-    fill:#ffd6d6;
-    opacity:.9;
-    transition:.3s;
-}
-.clock:hover .segment{
-    filter:drop-shadow(0 0 6px rgba(255,220,220,.9));
-}
-
-/* COLON */
-.colon{
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-}
-.dot{
-    width:6px;
-    height:6px;
-    background:#ffd6d6;
-    border-radius:2px;
-}
-
-/* AM PM */
-.ampm{
-    font-size:14px;
-    color:#ffd6d6;
-    align-self:flex-start;
-}
-
-/* LINE + LABEL */
-.line{
+/* GRADIENT BORDER */
+.clock::before{
+    content:"";
     position:absolute;
-    bottom:-1px;
-    left:8%;
-    width:84%;
-    height:1px;
-    background:#777;
+    inset:0;
+    border-radius:32px;
+    padding:4px;
+    background:linear-gradient(90deg,#ff6fae,#ffd199);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;
+            mask-composite:exclude;
 }
-.label{
+
+/* 🔥 BORDER CUT STRIP */
+.border-cut{
     position:absolute;
-    bottom:-9px;
+    bottom:2px;
     left:50%;
     transform:translateX(-50%);
-    padding:0 10px;
-    font-size:9px;
-    letter-spacing:2px;
-    color:#9a9a9a;
-    background:black;
+    background:#000;
+    padding:0 14px;
+    z-index:3;
 }
-.clock:hover .label{color:#ffd6d6;}
+
+/* 🔥 TIMER CHANNEL TEXT */
+.border-cut span{
+    font-size:10px;
+    letter-spacing:2px;
+    color:#ffbfcf;
+    opacity:0.9;
+}
+
+svg{
+    width:470px;
+    height:110px;
+    z-index:2;
+}
+
+.seg{ fill:#ffd6c8 }
+.col{ fill:#ff9fb9 }
+
+#ampm{
+    fill:#ffb6c8;
+    font-size:18px;
+    font-weight:bold;
+}
 </style>
 </head>
 
 <body>
 
 <div class="clock">
-    <div class="display">
 
-        <!-- 1 -->
-        <svg viewBox="0 0 60 90">
-            <rect class="segment" x="45" y="10" width="8" height="30"/>
-            <rect class="segment" x="45" y="50" width="8" height="30"/>
-        </svg>
+<svg viewBox="0 0 470 110">
+<g id="nums"></g>
+<text x="435" y="72" id="ampm">A.M.</text>
+</svg>
 
-        <!-- 2 -->
-        <svg viewBox="0 0 60 90">
-            <rect class="segment" x="10" y="0" width="40" height="8"/>
-            <rect class="segment" x="45" y="10" width="8" height="30"/>
-            <rect class="segment" x="10" y="41" width="40" height="8"/>
-            <rect class="segment" x="7" y="50" width="8" height="30"/>
-            <rect class="segment" x="10" y="82" width="40" height="8"/>
-        </svg>
-
-        <!-- : -->
-        <div class="colon">
-            <div class="dot"></div>
-            <div class="dot"></div>
-        </div>
-
-        <!-- 0 -->
-        <svg viewBox="0 0 60 90">
-            <rect class="segment" x="10" y="0" width="40" height="8"/>
-            <rect class="segment" x="45" y="10" width="8" height="30"/>
-            <rect class="segment" x="45" y="50" width="8" height="30"/>
-            <rect class="segment" x="10" y="82" width="40" height="8"/>
-            <rect class="segment" x="7" y="50" width="8" height="30"/>
-            <rect class="segment" x="7" y="10" width="8" height="30"/>
-        </svg>
-
-        <!-- 0 -->
-        <svg viewBox="0 0 60 90">
-            <rect class="segment" x="10" y="0" width="40" height="8"/>
-            <rect class="segment" x="45" y="10" width="8" height="30"/>
-            <rect class="segment" x="45" y="50" width="8" height="30"/>
-            <rect class="segment" x="10" y="82" width="40" height="8"/>
-            <rect class="segment" x="7" y="50" width="8" height="30"/>
-            <rect class="segment" x="7" y="10" width="8" height="30"/>
-        </svg>
-
-        <div class="ampm">A.M.</div>
-    </div>
-
-    <div class="line"></div>
-    <div class="label">TIMER CHANNEL</div>
+<div class="border-cut">
+    <span>TIMER CHANNEL</span>
 </div>
+
+</div>
+
+<script>
+const map={
+0:[1,1,1,1,1,1,0],
+1:[0,1,1,0,0,0,0],
+2:[1,1,0,1,1,0,1]
+};
+
+function r(x,y,w,h){
+ return `<rect class="seg" x="${x}" y="${y}" rx="4" width="${w}" height="${h}"/>`;
+}
+
+function draw(n,x){
+ let s=map[n],o='';
+ if(s[0])o+=r(x+12,5,46,10);
+ if(s[1])o+=r(x+60,18,10,38);
+ if(s[2])o+=r(x+60,62,10,38);
+ if(s[3])o+=r(x+12,95,46,10);
+ if(s[4])o+=r(x,62,10,38);
+ if(s[5])o+=r(x,18,10,38);
+ if(s[6])o+=r(x+12,50,46,10);
+ return o;
+}
+
+let time="1200";
+let x=0,html='';
+for(let i=0;i<4;i++){
+ html+=draw(time[i],x);
+ if(i==1){
+  html+=`<circle class="col" cx="${x+92}" cy="40" r="5"/>
+         <circle class="col" cx="${x+92}" cy="70" r="5"/>`;
+  x+=44;
+ }
+ x+=92;
+}
+document.getElementById('nums').innerHTML=html;
+</script>
 
 </body>
 </html>
